@@ -1,98 +1,147 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <View style={styles.container}>
+          
+      <Text style={styles.heart}>❤️</Text>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <Text style={styles.title}>Morning Love</Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+      <Text style={styles.subtitle}>
+        Make her morning a little more special.
+      </Text>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Tomorrow's Message</Text>
+
+        <Text style={styles.message}>
+          Good morning beautiful ❤️{"\n\n"}
+          I hope you slept well. Just wanted to remind you
+          that you're the first person I think about when I wake up.
+          {"\n\n"}
+          Have an amazing day, baby 🥰
+        </Text>
+      </View>
+
+      
+    <Pressable
+      style={styles.button}
+      onPress={() => router.push("/generate")}>
+     <Text style={styles.buttonText}>
+      Generate Message
+      </Text>
+    </Pressable>
+
+      <Pressable style={styles.secondaryButton}
+        onPress={() => router.push("/histories")}>
+        <Text style={styles.secondaryButtonText}>
+          Message History
+        </Text>
+      </Pressable>
+
+
+
+      <Pressable style={styles.secondaryButton}
+        onPress={() => router.push("/schedule")}>
+        <Text style={styles.secondaryButtonText}>
+          Message Schedule
+        </Text>
+      </Pressable>
+
+      <Pressable style={styles.secondaryButton}
+        onPress={() => router.push("/memories")}>
+        <Text style={styles.secondaryButtonText}>
+           Memories 
+        </Text>
+      </Pressable>
+
+      <Pressable style={styles.secondaryButton}
+        onPress={() => router.push("/settings")}>
+        <Text style={styles.secondaryButtonText}>
+          settings
+        </Text>
+      </Pressable>
+
+
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    padding: 24,
+    justifyContent: "center",
+    backgroundColor: "#fff7fa",
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+
+  heart: {
+    fontSize: 55,
+    textAlign: "center",
+    marginBottom: 10,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
+
   title: {
-    textAlign: 'center',
+    fontSize: 32,
+    fontWeight: "700",
+    textAlign: "center",
+    color: "#222",
   },
-  code: {
-    textTransform: 'uppercase',
+
+  subtitle: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "#777",
+    marginTop: 8,
+    marginBottom: 30,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  card: {
+    backgroundColor: "white",
+    padding: 22,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 15,
+  },
+
+  message: {
+    fontSize: 16,
+    lineHeight: 25,
+    color: "#444",
+  },
+
+  button: {
+    backgroundColor: "#ff5c8a",
+    padding: 16,
+    borderRadius: 14,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+
+  secondaryButton: {
+    padding: 16,
+    borderRadius: 14,
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+
+  secondaryButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
