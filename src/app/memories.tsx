@@ -18,21 +18,48 @@ export default function MemoriesScreen() {
   const [insideJokes, setInsideJokes] = useState("");
   const [specialMemories, setSpecialMemories] = useState("");
 
-  function saveMemories() {
-  console.log("SAVE BUTTON PRESSED");
-
-  Alert.alert(
-    "Saved ❤️",
-    "Her memories have been saved successfully!",
-    [
+  async function saveMemories() {
+  try {
+    const response = await fetch(
+      "http://10.106.103.187:8000/memories/",
       {
-        text: "OK",
-        onPress: () => console.log("OK pressed"),
-      },
-    ]
-  );
-}
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname,
+          favourite_food: favouriteFood,
+          favourite_drink: favouriteDrink,
+          favourite_flower: favouriteFlower,
+          things_she_loves: thingsSheLoves,
+          inside_jokes: insideJokes,
+          special_memories: specialMemories,
+        }),
+      }
+    );
 
+    if (!response.ok) {
+      throw new Error("Failed to save memories");
+    }
+
+    const data = await response.json();
+
+    Alert.alert(
+      "Saved ❤️",
+      "Her memories have been saved successfully!"
+    );
+
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+
+    Alert.alert(
+      "Error",
+      "Could not save the memories."
+    );
+  }
+}
   return (
     <ScrollView
       style={styles.container}
@@ -125,7 +152,7 @@ export default function MemoriesScreen() {
       />
 
       <Pressable
-  onPress={() => Alert.alert("the memories have been saved!")}
+  onPress={saveMemories}
   style={styles.button}
 >
   <Text style={styles.buttonText}>
