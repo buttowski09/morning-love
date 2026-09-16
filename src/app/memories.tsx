@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 
+const API_URL = "http://10.106.101.109:8000";
+
 export default function MemoriesScreen() {
   const [nickname, setNickname] = useState("");
   const [favouriteFood, setFavouriteFood] = useState("");
@@ -18,11 +20,46 @@ export default function MemoriesScreen() {
   const [insideJokes, setInsideJokes] = useState("");
   const [specialMemories, setSpecialMemories] = useState("");
 
+  // Load saved memories when the screen opens
+  useEffect(() => {
+    loadMemories();
+  }, []);
+
+  async function loadMemories() {
+    try {
+      console.log("Loading memories...");
+
+      const response = await fetch(`${API_URL}/memories/`);
+
+      if (!response.ok) {
+        throw new Error("Failed to load memories");
+      }
+
+      const data = await response.json();
+
+      console.log("MEMORIES FROM DATABASE:", data);
+
+      // If there are saved memories
+      if (data.length > 0) {
+        // Get the most recently saved memory
+        const memory = data[data.length - 1];
+
+        setNickname(memory.nickname || "");
+        setFavouriteFood(memory.favourite_food || "");
+        setFavouriteDrink(memory.favourite_drink || "");
+        setFavouriteFlower(memory.favourite_flower || "");
+        setThingsSheLoves(memory.things_she_loves || "");
+        setInsideJokes(memory.inside_jokes || "");
+        setSpecialMemories(memory.special_memories || "");
+      }
+    } catch (error) {
+      console.error("LOAD MEMORIES ERROR:", error);
+    }
+  }
+
   async function saveMemories() {
-  try {
-    const response = await fetch(
-      "http://10.106.103.187:8000/memories/",
-      {
+    try {
+      const response = await fetch(`${API_URL}/memories/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,30 +73,30 @@ export default function MemoriesScreen() {
           inside_jokes: insideJokes,
           special_memories: specialMemories,
         }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save memories");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Failed to save memories");
+      const data = await response.json();
+
+      console.log("SAVED MEMORY:", data);
+
+      Alert.alert(
+        "Saved ❤️",
+        "Her memories have been saved successfully!"
+      );
+    } catch (error) {
+      console.error("SAVE ERROR:", error);
+
+      Alert.alert(
+        "Error",
+        "Could not save the memories."
+      );
     }
-
-    const data = await response.json();
-
-    Alert.alert(
-      "Saved ❤️",
-      "Her memories have been saved successfully!"
-    );
-
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-
-    Alert.alert(
-      "Error",
-      "Could not save the memories."
-    );
   }
-}
+
   return (
     <ScrollView
       style={styles.container}
@@ -152,13 +189,13 @@ export default function MemoriesScreen() {
       />
 
       <Pressable
-  onPress={saveMemories}
-  style={styles.button}
->
-  <Text style={styles.buttonText}>
-    save memories 
-  </Text>
-</Pressable>
+        onPress={saveMemories}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>
+          Save Memories ❤️
+        </Text>
+      </Pressable>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>
@@ -262,3 +299,4 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
 });
+
