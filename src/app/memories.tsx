@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-const API_URL = "http://10.106.101.109:8000";
+const API_URL = "http://10.106.103.170:8000";
 
 export default function MemoriesScreen() {
   const [nickname, setNickname] = useState("");

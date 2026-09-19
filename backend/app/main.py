@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from .database import Base, engine
 from .routes.memories import router as memories_router
+from .routes.messages import router as messages_router
 
 from . import models
 
@@ -17,6 +18,7 @@ app = FastAPI(
 
 
 app.include_router(memories_router)
+app.include_router(messages_router)
 
 
 @app.get("/")
